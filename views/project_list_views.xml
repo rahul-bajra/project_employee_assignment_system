@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="project_list_action" model="ir.actions.act_window">
+        <field name="name">Project List View</field>
+        <field name="res_model">project.list</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="view_project_list_tree" model="ir.ui.view">
+        <field name="name">project.list.tree</field>
+        <field name="model">project.list</field>
+        <field name="arch" type="xml">
+            <tree string=" Project List Tree" editable="bottom">
+                <button name="action_view_project_assignments_per_month" type="object" string="Edit" class="btn-primary"/>
+                <button name="action_view_project_list_per_month" type="object" string="Summary" class="btn-primary"/>
+                <field name="project_code"/>
+                <field name="project_name"/>
+                <field name="op_hours_planned"/>
+                <field name="op_hours_actual"/>
+                <field name="planned_cost"/>
+                <field name="actual_cost"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

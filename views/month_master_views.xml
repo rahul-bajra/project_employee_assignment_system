@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="month_master_action" model="ir.actions.act_window">
+        <field name="name">Month Master</field>
+        <field name="res_model">month.master</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="view_month_master_tree" model="ir.ui.view">
+        <field name="name">month.master.tree</field>
+        <field name="model">month.master</field>
+        <field name="arch" type="xml">
+            <tree string="Month Master Tree" editable="bottom"> 
+                <field name="month"/>
+                <field name="order"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
