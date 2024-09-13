@@ -14,6 +14,8 @@ class ProjectEmployeeAssign(models.Model):
     month = fields.Many2one("month.master", required=True, help='Unique Key', index=True)
     op_hours_planned = fields.Float(required=True)
     op_hours_actual = fields.Float(required=True)
+    planned_cost = fields.Float(string='Planned Cost', compute='_compute_costs', store=True)
+    actual_cost = fields.Float(string='Actual Cost', compute='_compute_costs', store=True)
 
     _sql_constraints = [
         ('unique_project_employee_year_month', 'UNIQUE(project_code, employee_code, year, month)', 'The combination of project code, employee code, year, and month must be unique.')
@@ -42,11 +44,13 @@ class ProjectEmployeeAssign(models.Model):
     def create(self, vals):
         res = super(ProjectEmployeeAssign, self).create(vals)
         res._update_project_list_hours()
+        res._update_project_list_costs()  
         return res
 
     def write(self, vals):
         res = super(ProjectEmployeeAssign, self).write(vals)
         self._update_project_list_hours()
+        self._update_project_list_costs() 
         return res
 
     def _update_project_list_hours(self):
@@ -56,5 +60,24 @@ class ProjectEmployeeAssign(models.Model):
             _logger.info(f"Recomputing OP hours for project {project.project_code}")
             project._compute_op_hours()
 
+    def _update_project_list_costs(self):
+        _logger.info(f"Updating project list costs for project: {self.project_code.id}")
+        project_list_records = self.env['project.list'].search([('project_code', '=', self.project_code.id)])
+        for project in project_list_records:
+            _logger.info(f"Recomputing costs for project {project.project_code}")
+            project._compute_costs()  
 
+    # compute actual cost
+    @api.depends('employee_code', 'op_hours_planned', 'op_hours_actual')
+    def _compute_costs(self):
+        for record in self:
+            if record.employee_code and record.employee_code.class_code:
+                unit_price = record.employee_code.class_code.unit_price
+                
+                record.planned_cost = unit_price * record.op_hours_planned if unit_price else 0.0
+                
+                record.actual_cost = unit_price * record.op_hours_actual if unit_price else 0.0
+            else:
+                record.planned_cost = 0.0
+                record.actual_cost = 0.0
  

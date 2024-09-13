@@ -9,11 +9,10 @@ class ProjectListPerMonth(models.Model):
     project_code = fields.Many2one('project.master', string='Project Code', help='Reference to the Project Master')
     month = fields.Many2one("month.master", required=True, help='Unique Key', index=True)
     employee_assignment_id = fields.Many2many('project.employee.assign', string='Employee Assignment')
-
     op_hours_planned = fields.Float(string='OP Hours Planned', compute='_compute_hours', store=True)
     op_hours_actual = fields.Float(string='OP Hours Actual', compute='_compute_hours', store=True)
-    planned_cost = fields.Float(string='Planned Cost', compute='_compute_costs', store=True)
-    actual_cost = fields.Float(string='Actual Cost', compute='_compute_costs', store=True)
+    planned_cost = fields.Float(related='employee_assignment_id.planned_cost', compute='_compute_costs', store=True)
+    actual_cost = fields.Float(related='employee_assignment_id.actual_cost', compute='_compute_costs', store=True)
 
     @api.depends('employee_assignment_id')
     def _compute_hours(self):

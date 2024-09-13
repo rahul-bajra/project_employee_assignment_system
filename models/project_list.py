@@ -31,7 +31,7 @@ class ProjectList(models.Model):
     @api.depends('project_code')
     def _compute_costs(self):
         for record in self:
-            monthly_records = self.env['project.list.per.month'].search([
+            monthly_records = self.env['project.employee.assign'].search([
                 ('project_code', '=', record.project_code.id)
             ])
             _logger.info(f"Monthly Records: {monthly_records}")
