@@ -1,8 +1,4 @@
 from odoo import models, fields, api
-import logging
-
-_logger = logging.getLogger(__name__)
-
 
 class ProjectEmployeeAssign(models.Model):
     _name = "project.employee.assign"
@@ -54,17 +50,13 @@ class ProjectEmployeeAssign(models.Model):
         return res
 
     def _update_project_list_hours(self):
-        _logger.info(f"Updating project list hours for project: {self.project_code.id}")
         project_list_records = self.env['project.list'].search([('project_code', '=', self.project_code.id)])
         for project in project_list_records:
-            _logger.info(f"Recomputing OP hours for project {project.project_code}")
             project._compute_op_hours()
 
     def _update_project_list_costs(self):
-        _logger.info(f"Updating project list costs for project: {self.project_code.id}")
         project_list_records = self.env['project.list'].search([('project_code', '=', self.project_code.id)])
         for project in project_list_records:
-            _logger.info(f"Recomputing costs for project {project.project_code}")
             project._compute_costs()  
 
     # compute actual cost

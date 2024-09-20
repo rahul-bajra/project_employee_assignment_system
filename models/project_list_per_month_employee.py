@@ -13,3 +13,14 @@ class ProjectListPerMonthEmployee(models.Model):
     planned_cost = fields.Float(related='employee_assignment_id.planned_cost', compute='_compute_costs', store=True)
     actual_cost = fields.Float(related='employee_assignment_id.actual_cost', compute='_compute_costs', store=True)
 
+    def action_view_employee_assignments_per_month(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': f'Assignments for {self.employee_code.name}',
+            'res_model': 'project.employee.assign.per.month',
+            'view_mode': 'tree',
+            'view_id': self.env.ref('project_employee_assignment_system.view_employee_assign_per_month_tree').id,
+            'domain': [('employee_code', '=', self.employee_code.id)],
+            'context': {'default_employee_code': self.employee_code.id},
+        }

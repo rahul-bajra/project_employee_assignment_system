@@ -12,6 +12,7 @@
         <field name="arch" type="xml">
             <tree string=" Project List Per Month Employee View Tree" editable="bottom"> 
                 <field name="employee_code" string="Employee"/>
+                <button name="action_view_employee_assignments_per_month" type="object" string="View" class="btn-primary"/>
                 <field name="op_hours_planned"/>
                 <field name="op_hours_actual"/>
                 <field name="planned_cost"/>
